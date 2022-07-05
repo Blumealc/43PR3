@@ -13,7 +13,6 @@ La realizzazione consiste nella creazione dei 3 anelli di altoparlanti:
 E sono così disposti:
 
 <img src="Resources/Schermata%202022-07-05%20alle%2011.35.18.png" width="200">
-![](Resources/Schermata%202022-07-05%20alle%2011.35.18.png =100x20)
 > il grafico è una rappresentazione planare della semisfera dall'alto.
 > 
 > I *cerchi verdi* sono i **led** atti a monitorare lo stato del guadagno audio, dove il bianco $x = 0$ e il rosso se $x > 0.97$.
