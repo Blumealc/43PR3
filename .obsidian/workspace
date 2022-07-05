@@ -1,0 +1,89 @@
+{
+  "main": {
+    "id": "314cba65653f381d",
+    "type": "split",
+    "children": [
+      {
+        "id": "03dbf7483896c836",
+        "type": "leaf",
+        "state": {
+          "type": "empty",
+          "state": {}
+        }
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "e4d4a4f07901c09e",
+    "type": "split",
+    "children": [
+      {
+        "id": "65f328a169b2b6e5",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "d3de05908095ef53",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {}
+            }
+          },
+          {
+            "id": "9de448267cd17dcc",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "ac757cdcfb0ee73b",
+    "type": "split",
+    "children": [
+      {
+        "id": "1a7075cadec492a2",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "696141a2341949ec",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "active": "03dbf7483896c836",
+  "lastOpenFiles": [
+    "osc-js-master 11.58.03/README.md"
+  ]
+}
