@@ -7,8 +7,12 @@
         "id": "03dbf7483896c836",
         "type": "leaf",
         "state": {
-          "type": "empty",
-          "state": {}
+          "type": "markdown",
+          "state": {
+            "file": "README.md",
+            "mode": "source",
+            "source": false
+          }
         }
       }
     ],
@@ -65,6 +69,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "README.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -84,6 +89,8 @@
   },
   "active": "03dbf7483896c836",
   "lastOpenFiles": [
+    "README.md",
+    "Resources/Schermata 2022-07-05 alle.md",
     "osc-js-master 11.58.03/README.md"
   ]
 }
