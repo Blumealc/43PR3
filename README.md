@@ -12,7 +12,7 @@ La realizzazione consiste nella creazione dei 3 anelli di altoparlanti:
 
 E sono così disposti:
 
-<img src="Resources/Schermata%202022-07-05%20alle%2011.35.18.png" width="200">
+<img src="Resources/Schermata%202022-07-05%20alle%2011.35.18.png" width="300">
 
 > il grafico è una rappresentazione planare della semisfera dall'alto.
 > 
