@@ -1,4 +1,4 @@
-W = 1200;
+W = 720;
 H = W;
 mx = W/2;
 my = H/2;
@@ -18,7 +18,7 @@ deg = 0;
 deg_old = deg;
 
 function setup() {
-  createCanvas(1200, 1200);
+  createCanvas(720, 1280);
 }
 
 function draw() {
@@ -82,7 +82,6 @@ function draw() {
       circle(px, py, W*0.025);
     }
   }
-  
 }
 
 function calc() {

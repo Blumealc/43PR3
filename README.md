@@ -13,6 +13,7 @@ La realizzazione consiste nella creazione dei 3 anelli di altoparlanti:
 E sono così disposti:
 
 <img src="Resources/Schermata%202022-07-05%20alle%2011.35.18.png" width="200">
+
 > il grafico è una rappresentazione planare della semisfera dall'alto.
 > 
 > I *cerchi verdi* sono i **led** atti a monitorare lo stato del guadagno audio, dove il bianco $x = 0$ e il rosso se $x > 0.97$.
@@ -98,6 +99,29 @@ Infine attraverso una seconda interazione contemporanea a quella di movimento de
 }
 ```
 
+La funzione `sendMSG(arg, value)` è cos' realizzata:
+
+```js
+// funzione per inviare messaggi OSC
+
+function sendMSG(chan, msg) {
+	var message = new OSC.Message(chan, msg);
+	osc.send(message);
+}
+```
+
+Mentre la funzione `clip(value, max, min)`:
+```js
+// funzione per clipping
+
+function clip(v, a, b) {
+	if (v>a) {v = a};
+	if (v<b) {v = b};
+	return v;
+}
+```
+
+
 Il resto dell'interfaccia consiste in un raggio che indica la posizione di puntamento `(sxx, syy)`, un sistema di feedback dei *led*, un *arco* ed un ulteriore segmento che indicano il valore di *separazione*.
 
 ```js
@@ -168,3 +192,145 @@ function draw() {
 	}
 }
 ```
+
+
+### WebSocket
+Per permettere la comunicazione da server accessibile da network locale (quindi anche da dispositivo diverso dal computer con l'istanza di *Max MSP*), è stato utilizzato *NodeJs* e due sue librerie, *osc.js* e *ws*, per creare il collegamento su indirzzo IP definito `192.168.1.121` su porta `:9000`, ed infine una funzione per inviare i messaggi di stato *led*.
+
+```js
+const OSC = require('osc-js')
+const maxApi = require('max-api');
+
+// avvia un web socket su ws://192.168.1.121:9000
+const config = { udpClient: { host:"192.168.1.121", port: 9000 }, wsServer: {host:"192.168.1.121", port: 9000} }
+const osc = new OSC({ plugin: new OSC.BridgePlugin(config) })
+osc.open()
+
+// riceve in input messaggi 'send'
+maxApi.addHandler(
+	"send", (...args)=>{
+		var message = new OSC.Message(args[0], args[1]);
+		osc.send(message);
+	}
+);
+```
+
+Infine l'html, apre l'istanza su stesso *host*, inizializza le variabili e riceve i valori da *MaxMSP* suddivisi nei tre anelli di altoparlanti. Viene poi richiamato `sketch.js` che contiene la parte grafica e di calcolo, e un file `css` che disabilita le funzioni di *selezione*, *pinch zoom* e *scroll*.
+
+```html
+<html>
+<head>
+<script src = "https://cdn.jsdelivr.net/npm/p5@1.4.1/lib/p5.js"></script>
+<script src = "https://cdn.jsdelivr.net/npm/osc-js@2.2.0/lib/osc.min.js"></script>
+<script type = "text/javascript">
+	var osc = new OSC();
+	osc.open({host:"192.168.1.121", port:9000});
+	var leds1 = [0,0,0,0,0,0,0,0,0,0];
+	var leds2 = [0,0,0,0,0,0,0,0,0];
+	var leds3 = [0,0,0];
+
+// riceve i valori monitoring dei led e decritta i valori e indice
+
+	osc.on('/leds1', message => {
+		var id1 = (message.args-(message.args)%10);
+		var id = (9-id1*0.1+1)%10;
+		leds1[id] = message.args-id1;
+	})
+
+	osc.on('/leds2', message => {
+		var id2 = (message.args-(message.args)%10);
+		var id = (8-id2*0.1+1)%9;
+		leds2[id] = message.args-id2;
+	})
+
+  
+
+	osc.on('/leds3', message => {
+		var id3 = (message.args-(message.args)%10);
+		var id = (2-id3*0.1+1)%3;
+		leds3[id] = message.args-id3;
+	})
+</script>
+<script src="sketch.js"></script>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+```
+
+
+### Max MSP
+Infine sul software di controllo audio vengono ricevuti e inviati i messaggi e formattati da due routine di *javascript*, una che prepara le liste per il monitoring dei *led* da inviare e una che prepara i messaggi ricevuti per i vari oggetti che controllano la posizione della sorgente (*spanner10, spanner 9, spanner3 e spannervert*).
+
+La prima:
+```js
+autowatch = 1;
+outlets = 1;
+var lst1 = [];
+var lst2 = [];
+var lst3 = [];
+
+// inizializzazione per interpolazione delle variabili
+
+for (var i = 0; i < 10; i++) {
+	lst1[i] = 0;
+	lst2[i] = 0;
+	lst3[i] = 0;
+}
+ 
+// loops per invio dei messaggi, l'indice del led viene indicato dalle decine
+
+function leds1(v) {
+	var lst = arrayfromargs(arguments);
+	for (i = 0; i < lst.length; i++) {
+		lst[i] = (lst1[i]+lst[i])*0.5;
+		outlet(0, "/leds1",i*10+lst[i]);
+		lst1[i] = lst[i];
+	}
+} 
+
+function leds2(v) {
+	var lst = arrayfromargs(arguments);
+	for (i = 0; i < lst.length; i++) {
+		lst[i] = (lst2[i]+lst[i])*0.5;
+		outlet(0, "/leds2",i*10+lst[i]);
+		lst2[i] = lst[i];
+	}
+}
+
+function leds3(v) {
+	var lst = arrayfromargs(arguments);
+	for (i = 0; i < lst.length; i++) {
+		lst[i] = (lst3[i]+lst[i])*0.5;
+		outlet(0, "/leds3",i*10+lst[i]);
+		lst3[i] = lst[i];
+	}
+}
+```
+
+> L'indice del led corrispettivo è indicato dalle decine del valore inviato, il formato della lista sarà simile a:
+> 	`/leds1 10.5`
+> dove le decine indicano il secondo *led* e le unita+decimali indicano il valore da rappresentare.
+
+La seconda:
+```js
+autowatch = 1;
+outlets = 4;
+
+function wsMsg() {
+	var m = arrayfromargs(arguments);
+	if (m[0] == "/distance") {outlet(0, "/spanner_v/Angle", m[1]);}
+	if (m[0] == "/deg") {
+		outlet(1, "/spanner10/Angle", m[1]);
+		outlet(2, "/spanner9/Angle", m[1]);
+		outlet(3, "/spanner3/Angle", m[1]);
+	}
+
+	if (m[0] == "/hsep") {
+		outlet(1, "/spanner10/Separation", m[1]);
+		outlet(2, "/spanner9/Separation", m[1]*9*0.1);
+		outlet(3, "/spanner3/Separation", m[1]*3*0.1);
+	}
+
+	if (m[0] == "/vsep") {outlet(0, "/spanner_v/Separation", m[1]);}
+```
+

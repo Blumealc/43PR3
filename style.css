@@ -1,11 +1,18 @@
 html, body {
+  background-color: rgb(12, 12, 12);
   margin: 0;
   padding: 0;
-  height:1200px;
-  width:1200px;
+  height:1280px;
+  width:720px;
   border: 2px solid black;
   touch-action: none;
 }
 canvas {
   display: block;
+}
+
+.prevent-select {
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
 }
