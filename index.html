@@ -1,0 +1,38 @@
+<html>
+<head>
+    <script src =  "https://cdn.jsdelivr.net/npm/p5@1.4.1/lib/p5.js"></script>
+    <script src =  "https://cdn.jsdelivr.net/npm/osc-js@2.2.0/lib/osc.min.js"></script>
+    <script type = "text/javascript">
+        var osc = new OSC();
+        osc.open({host:"192.168.1.121", port:9000});
+        var leds1 = [0,0,0,0,0,0,0,0,0,0];
+        var leds2 = [0,0,0,0,0,0,0,0,0];
+        var leds3 = [0,0,0];
+
+        // riceve i valori monitoring dei led e decritta i valori e indice
+        osc.on('/leds1', message => {
+            var id1 = (message.args-(message.args)%10);
+            var id = (9-id1*0.1+1)%10;
+            leds1[id] = message.args-id1;
+        })
+
+        osc.on('/leds2', message => {
+            var id2 = (message.args-(message.args)%10);
+            var id = (8-id2*0.1+1)%9;
+            leds2[id] = message.args-id2;
+        })
+
+        osc.on('/leds3', message => {
+            var id3 = (message.args-(message.args)%10);
+            var id = (2-id3*0.1+1)%3;
+            leds3[id] = message.args-id3;
+        })
+
+    </script>
+    <script src="sketch.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+</body>
+</html>
